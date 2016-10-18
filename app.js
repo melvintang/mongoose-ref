@@ -75,7 +75,7 @@ mongoose.Promise = global.Promise
 //console.log('the environment is on ' + process.env.NODE_ENV)
 
 if (process.env.NODE_ENV === 'production') {
-  mongoose.connect('mongodb://<dbuser>:<dbpassword>@ds061076.mlab.com:61076/wdi6')
+  mongoose.connect('mongodb://wdi6:Patrick786@ds061076.mlab.com:61076/wdi6')
 } else {
   mongoose.connect('mongodb://localhost/data')
 }
