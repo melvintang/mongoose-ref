@@ -1,0 +1,31 @@
+<%# include relative path to the partials file %>
+<% include ../partials/header.ejs  %>
+<h1>All Salespersons Details</h1>
+<h2>
+  <%= name %>
+</h2>
+
+<h3>Using basic for loop</h3>
+<ul>
+    <% for (var i = 0; i < personsArr.length; i++) { %>
+      <li>
+        Salesperson Name: <%= personsArr[i].name %><br>
+        Salesperson Region: <%= personsArr[i].region %><br>
+        Salesperson Power: <%= personsArr[i].power %><br>
+        <br><br>
+      </li>
+    <% } %>
+</ul>
+
+<h3>Using foreach</h3>
+<ul>
+    <% personsArr.forEach(function(person) { %>
+      <li>
+        Salesperson Name: <%= person.name %><br>
+        Salesperson Region: <%= person.region %><br>
+        Salesperson Power: <%= person.power %><br>
+        <br><br>
+      </li>
+    <% }) %>
+</ul>
+<% include ../partials/footer.ejs  %>

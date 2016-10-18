@@ -1,0 +1,24 @@
+<h2>Back to All Users</h2>
+
+<ul>
+<% for (var i = 0; i < users.length; i++) { %>
+  <li>
+    <h2><%= users[i].name%></h2>
+    <ul>
+      <li><strong>ID</strong> :
+        <a href="/users/<%= users[i].id %>"><%= users[i].id %></a> </li>
+      <li><strong>Relationship : </strong> <%= users[i].relationship %></li>
+      <li><strong>Dob : </strong> <%= new Date(users[i].dob).toDateString() %></li>
+      <li><strong>Gender : </strong> <%= users[i].gender %></li>
+      <li><strong>Family : </strong> <%= users[i].family %></li>
+      <li>
+        <% if(users[i].status == "orphan") { %>
+          <a href="/users/<%= users[i].id %>/adopt">Adopt</a>
+        <% } else { %>
+          <a href="/users/<%= users[i].id %>/abandon">Abandon</a>
+        <% } %>
+      </li>
+    </ul>
+  </li>
+<% } %>
+</ul>

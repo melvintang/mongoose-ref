@@ -1,0 +1,43 @@
+<%# include relative path to the partials file %>
+<% include ../partials/header.ejs  %>
+
+<h1>NEW INVOICE FORM</h1>
+
+<%# include relative path to the partials file %>
+<% include ../partials/header.ejs  %>
+
+<h1>Form for New Invoice</h1>
+
+<form method="post" action="/invoices">
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input type="name" class="form-control" id="name" placeholder="Name" name="invoice[name]">
+  </div>
+  <div class="form-group">
+    <label for="address">Address</label>
+    <input type="address" class="form-control" id="address" placeholder="Address" name="invoice[power]">
+  </div>
+  <div class="form-group">
+    <label for="contact">Contact</label>
+    <input type="contact" class="form-control" id="contact" placeholder="Contact" name="invoice[contact]">
+  </div>
+  <label class="radio-inline">
+    <input type="radio" value="male" name="invoice[gender]">
+    Male
+  </label>
+  <label class="radio-inline">
+    <input type="radio" value="female" name="invoice[gender]">
+    Female
+  </label>
+  <div class="form-group">
+    <label for="parentName">Parent's name</label>
+    <input type="name" class="form-control" id="parentName" placeholder="Parent's Name" name="parentName">
+  </div>
+  <div class="form-group">
+    <label for="parentContact">Classes</label>
+    <input type="contact" class="form-control" id="contact" placeholder="Parent's Contact" name="parentContact">
+  </div>
+  <button type="submit" class="btn btn-default">Submit</button>
+</form>
+
+<% include ../partials/footer.ejs  %>
