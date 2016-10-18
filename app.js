@@ -71,9 +71,14 @@ app.use('/api/users', ajaxRoutes) // only handle ajax request
 // To avoid odd error handling behaviour
 mongoose.Promise = global.Promise
 // connect to MongoDB:a collection called data (not yet saved as collection) via localhost(this PC)
-mongoose.connect('mongodb://localhost/data')
+// mongoose.connect('mongodb://localhost/data')
+//console.log('the environment is on ' + process.env.NODE_ENV)
 
-
+if (process.env.NODE_ENV === 'production') {
+  mongoose.connect('mongodb://<dbuser>:<dbpassword>@ds061076.mlab.com:61076/wdi6')
+} else {
+  mongoose.connect('mongodb://localhost/data')
+}
 // app.get('/one_collection', function(){
 //
 //   parent.save()
@@ -181,5 +186,5 @@ var parent = new Parent({
 
 
 // Tell the express server to listen for connections at port 4000
-app.listen(port)
+app.listen(process.env.PORT || 3000)
 console.log('Server running at http://localhost:' + port + '/')
