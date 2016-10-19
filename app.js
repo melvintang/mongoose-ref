@@ -8,6 +8,7 @@ var methodOverride = require('method-override')
 // import mongoose, an ORM app to access MongoDB(datastore)
 var mongoose = require('mongoose')
 var layout = require('express-ejs-layouts')
+var dotenv = require('dotenv')
 
 
 // Create an instance of the Express server
@@ -74,11 +75,17 @@ mongoose.Promise = global.Promise
 // mongoose.connect('mongodb://localhost/data')
 //console.log('the environment is on ' + process.env.NODE_ENV)
 
-if (process.env.NODE_ENV === 'production') {
-  mongoose.connect('mongodb://wdi6:Patrick786@ds061076.mlab.com:61076/wdi6')
-} else {
-  mongoose.connect('mongodb://localhost/data')
-}
+// if (process.env.NODE_ENV === 'production') {
+//   mongoose.connect('mongodb://wdi6:Patrick786@ds061076.mlab.com:61076/wdi6')
+// } else {
+//   mongoose.connect('mongodb://localhost/data')
+// }
+
+/**
+ * Load environment variables from .env file, where API keys and passwords are configured.
+ */
+dotenv.load({ path: '.env.' + process.env.NODE_ENV })
+mongoose.connect(process.env.MONGO_URI)
 // app.get('/one_collection', function(){
 //
 //   parent.save()
@@ -186,5 +193,6 @@ var parent = new Parent({
 
 
 // Tell the express server to listen for connections at port 4000
+// app.listen(4000)
 app.listen(process.env.PORT || 3000)
 console.log('Server running at http://localhost:' + port + '/')
