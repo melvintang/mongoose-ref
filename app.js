@@ -5,11 +5,13 @@
 var express = require('express')
 var bodyParser = require('body-parser')
 var methodOverride = require('method-override')
+var flash = require('connect-flash')
+var session = require('express-session')
+var passport = require('passport')
 // import mongoose, an ORM app to access MongoDB(datastore)
 var mongoose = require('mongoose')
 var layout = require('express-ejs-layouts')
 var dotenv = require('dotenv')
-
 
 // Create an instance of the Express server
 
@@ -19,6 +21,14 @@ var dotenv = require('dotenv')
 var app = express()
 
 var port = 4000
+
+/**
+ * Load environment variables from .env file, where API keys and passwords are configured.
+ */
+ // This should be first!
+dotenv.load({ path: '.env.' + process.env.NODE_ENV })
+console.log('mongo uri is ' + process.env.MONGO_URI)
+mongoose.connect(process.env.MONGO_URI)
 
 // Import the routes which are web addresses / URLs:
 // require takes the name of the file in .js and returns the file.
@@ -32,9 +42,21 @@ var ajaxRoutes = require('./routes/users_api')
 // set the view engine to ejs where 1st input = setting, 2nd = value
 // app.set() is to set value (ejs) for a filename so that app.get() could get the value by filename.
 app.set('view engine', 'ejs')
-console.log ('View engine is ', app.get('view engine'))
+console.log('View engine is ', app.get('view engine'))
 // Filter all requests with express layout
 app.use(layout)
+app.use(session({
+  secret: process.env.EXPRESS_SECRET,
+  // Session is saved for any incoming data
+  resave: true,
+  // If session is not saved, initialize anyway.
+  saveUninitialized: true
+}))
+app.use(passport.initialize())
+app.use(passport.session())
+app.use(flash())
+
+
 
 // Middleware: for a request at url '/', do the direct app.get(),
 // and access static files in public folder.
@@ -65,15 +87,14 @@ app.use(methodOverride(function (req, res) {
 // app.use needs cb function next() to go to next request.
 app.use('/salespersons', salespersons_routes)
 app.use('/invoices', invoices_routes)
-app.use('/users', frontendRoutes) // only render ejs files
+app.use('/', frontendRoutes) // only render ejs files
 app.use('/api/users', ajaxRoutes) // only handle ajax request
-
 
 // To avoid odd error handling behaviour
 mongoose.Promise = global.Promise
 // connect to MongoDB:a collection called data (not yet saved as collection) via localhost(this PC)
 // mongoose.connect('mongodb://localhost/data')
-//console.log('the environment is on ' + process.env.NODE_ENV)
+// console.log('the environment is on ' + process.env.NODE_ENV)
 
 // if (process.env.NODE_ENV === 'production') {
 //   mongoose.connect('mongodb://wdi6:Patrick786@ds061076.mlab.com:61076/wdi6')
@@ -81,11 +102,6 @@ mongoose.Promise = global.Promise
 //   mongoose.connect('mongodb://localhost/data')
 // }
 
-/**
- * Load environment variables from .env file, where API keys and passwords are configured.
- */
-dotenv.load({ path: '.env.' + process.env.NODE_ENV })
-mongoose.connect(process.env.MONGO_URI)
 // app.get('/one_collection', function(){
 //
 //   parent.save()
@@ -102,12 +118,12 @@ mongoose.connect(process.env.MONGO_URI)
 // Using mongoose to create objects directly!!! Use node app.js to run new submissions of new object ids.
 // pass objects directly into schema
 // A parent can have many children
-var childSchema = new mongoose.Schema ({
+var childSchema = new mongoose.Schema({
   name: String,
   email: String
 })
 
-var parentSchema = new mongoose.Schema ({
+var parentSchema = new mongoose.Schema({
   name: String,
   email: String,
   // Important: A parent has an array of children. Each child is a schema
@@ -131,7 +147,6 @@ var parent = new Parent({
     }
   ]
 })
-
 
 // app.get('/anotherGameRoute', function(req, res) {
 //   res.render('index', {name: 'Pokemon Memory Game'})
@@ -191,8 +206,7 @@ var parent = new Parent({
 //   })
 // })
 
-
 // Tell the express server to listen for connections at port 4000
-// app.listen(4000)
-app.listen(process.env.PORT || 3000)
+app.listen(4000)
+// app.listen(process.env.PORT || 3000)
 console.log('Server running at http://localhost:' + port + '/')
