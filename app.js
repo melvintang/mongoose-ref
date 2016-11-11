@@ -5,12 +5,17 @@
 var express = require('express')
 var bodyParser = require('body-parser')
 var methodOverride = require('method-override')
+var morgan = require('morgan')
+
 var flash = require('connect-flash')
 var session = require('express-session')
 var passport = require('passport')
+var MongoStore = require('connect-mongo')(session)
+
 // import mongoose, an ORM app to access MongoDB(datastore)
 var mongoose = require('mongoose')
 var layout = require('express-ejs-layouts')
+
 var dotenv = require('dotenv')
 
 // Create an instance of the Express server
@@ -39,6 +44,7 @@ var invoices_routes = require('./routes/invoices')
 var frontendRoutes = require('./routes/users')
 var ajaxRoutes = require('./routes/users_api')
 
+app.use(morgan('dev'))
 // set the view engine to ejs where 1st input = setting, 2nd = value
 // app.set() is to set value (ejs) for a filename so that app.get() could get the value by filename.
 app.set('view engine', 'ejs')
@@ -47,11 +53,14 @@ console.log('View engine is ', app.get('view engine'))
 app.use(layout)
 app.use(session({
   secret: process.env.EXPRESS_SECRET,
-  // Session is saved for any incoming data
   resave: true,
-  // If session is not saved, initialize anyway.
-  saveUninitialized: true
+  saveUninitialized: true,
+  store: new MongoStore({
+    url: process.env.MONGO_URI,
+    autoReconnect: true
+  })
 }))
+
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(flash())

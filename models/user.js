@@ -55,7 +55,7 @@ userSchema.methods.sayName = function () {
 }
 
 // The authenticate method of userSchema
-userSchema.methods.authenticate = function (password, callback) {
+userSchema.methods.auth = function (password, callback) {
   console.log('given password is ' + password)
   console.log('saved password is ' + this.local.password)
   // Inside this authenticate method, you have bcrypt.compare method
@@ -84,7 +84,7 @@ var newUser = new User({
 newUser.save(function (err, newUser) {
   if (err) console.log(err.message)
   // console.log('new user saved')
-  newUser.authenticate('test123', function (err, authenticated) {
+  newUser.auth('test123', function (err, authenticated) {
     if (err) console.log('not authenticated')
     console.log('auth is ' + authenticated)
     if (authenticated) console.log('user is authenticated')
